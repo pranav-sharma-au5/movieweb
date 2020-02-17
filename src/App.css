@@ -1,5 +1,100 @@
-.App {
+
+body {
+  background-image: url("./work.png");
+  background-attachment: fixed;
+  background-size: 100%;
+  background-position: bottom;
+  height: 100vh;
+  overflow-x: hidden ;
+}
+nav {
+  height: 60px;
+  font-size: 20px;
+}
+
+.logo {
+  height: 30px;
+  width: 30px;
+  filter: invert();
+}
+.scrollable {
+  height: 100%;
+  transform: translate(0, 0);
+  position: relative;
+}
+
+.fa-hide {
+  color: black;
+  width: 0px;
+  font-size: 0px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: ease-out 0.3s;
+  border-radius: 10px;
+  /* border-top: 5px solid transparent; */
+  
+  /* border-right: 20px solid transparent; */
+  position: absolute;
+  left: 0px;
+  top: inherit;
+}
+
+
+
+.list-group-item:hover .fa-hide {
+  left: -50px;
+
+  background-color: #d4d4d4;
+  font-size: 20px;
+  z-index: 10;
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+  padding: 10px;
+  opacity: 1;
+  transform: scale(1.3);
   text-align: center;
+  background-clip: padding-box;
+}
+#triangle-right {
+  position: absolute;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-left: 10px solid #d4d4d4;
+  border-bottom: 7px solid transparent;
+}
+
+.actions {
+  margin-top: 0.5rem;
+}
+
+.fa-green {
+  margin-top: 0.3rem;
+}
+
+.list-group-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.deadline-icon {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.list-parent-div {
+  min-height: 100%;
+  position: relative;
+}
+
+.list-group {
+  padding-right: 5px;
+  min-height: 20vh;
 }
 
 .App-logo {
@@ -7,32 +102,165 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+
+
+.fa {
+  cursor: pointer;
+}
+
+body::-webkit-scrollbar {
+  width: 0.8em;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #adadad;
+  outline: 1px solid slategrey;
+  border-radius: 500px;
+}
+
+.tasks {
+  display: flex;
+}
+
+/* shake css */
+
+.deadline-span:hover {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* #8d1824d6!important
+#43c861b5!important */
+
+.dark-transparent {
+  background-color: #343a40a2 !important;
+}
+.bg-danger {
+  background-color: #8d1824d6 !important;
+}
+.bg-success {
+  background-color: #39a151c4 !important;
 }
 
-.App-link {
-  color: #61dafb;
+.before-update {
+  width: 60px;
+  font-size: 0px;
+  opacity: 0;
+  transition: linear 0.4s;
 }
 
-@keyframes App-logo-spin {
+.on-update {
+  font-size: 16px;
+  width: 100%;
+  opacity: 1;
+}
+
+.li-animate-left {
+  position: relative;
+  animation: animateleft 1s;
+}
+@keyframes animateleft {
   from {
-    transform: rotate(0deg);
+    left: -300px;
+    opacity: 0;
   }
   to {
-    transform: rotate(360deg);
+    left: 0;
+    opacity: 1;
   }
 }
+.animate-down {
+  position: relative;
+  animation: animatedown 2s;
+}
+@keyframes animatedown {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+.animate-fading {
+  animation: fading 3s infinite;
+}
+@keyframes fading {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.delete-fade-out {
+  animation: fade-in 0.3s ease-out;
+}
+@keyframes fade-in {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-top {
+  position: relative;
+  animation: animatetop 0.6s;
+}
+@keyframes animatetop {
+  from {
+    top: -100px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+/* .animate-up {
+  position: relative;
+  animation: animateup 0.6s forwards; 
+}
+@keyframes animateup {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+  to {
+    top: -100px;
+    opacity: 0;
+  }
+} */
