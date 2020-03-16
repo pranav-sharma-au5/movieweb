@@ -1,47 +1,31 @@
-import React from "react";
-import Navbar from "./Navbar";
-import Input from "./Input";
-import List from "./List";
+import React, { Component } from 'react';
+import { Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
 import "./App.css";
-import { connect } from "react-redux"
+import Home from "./components/Home";
+import Details from "./components/Details";
 
-class App extends React.Component {
-
-
-  toggleIsCompleted(todo) {
-    var todos = this.props.todos.slice();
-    todos[todos.indexOf(todo)].isCompleted = !todos[todos.indexOf(todo)]
-      .isCompleted;
-
-    this.props.dispatch({
-      type: "set_state", payload: {
-        todos: todos
-      }
-    });
-  }
-
+class App extends Component {
   render() {
     return (
-      <div>
-        <Navbar />
-        <div className=" p-5 m-5">
-          <div className="row">
-            <div className="col-md-5">
-              <Input />
-            </div>
-            <div className="col-md-6  offset-md-1">
-              <List />
-            </div>
-          </div>
+      <BrowserRouter>
+
+        <div className="ml-7">
+          <Switch>
+
+            <Route path="/" exact >
+              <Redirect to="/movies" />
+            </Route>
+            <Route path="/movies/:movie/:movieId" component={Details} />
+            <Route path="/tvshows/:tv/:tvId" component={Details} />
+
+
+            <Route path="/movies" component={Home} />
+            <Route path="/tvshows" component={Home} />
+          </Switch>
         </div>
-      </div>
-    );
+      </BrowserRouter>
+    )
   }
 }
 
-
-let mapStateToProps = state => {
-  return state
-}
-export default connect(mapStateToProps)(App);
-
+export default App;
