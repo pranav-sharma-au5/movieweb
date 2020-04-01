@@ -91,7 +91,7 @@ export function fetchingData() {
 export function getTorrentLinks(video) {
     let request = axios({
         method: "get",
-        url: ` https://get-magnet.herokuapp.com//?video=${video}`
+        url: ` http://get-magnet.herokuapp.com/?video=${video}`
     })
     return (dispatch) => {
         request.then(torrents => {

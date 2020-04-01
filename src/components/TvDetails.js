@@ -22,6 +22,9 @@ class Details extends Component {
     goToTrailer() {
         window.scrollTo(0, document.body.scrollHeight)
     }
+    toggleTrailer = () => {
+        this.setState((prevState) => ({ trailer: !prevState.trailer }))
+    }
 
 
 
@@ -57,8 +60,8 @@ class Details extends Component {
 
 
     render() {
-        let { video, fetching, torrents } = this.props
-        console.log(video)
+        let { video, fetching, torrents, trailer } = this.props
+        const { showtrailer } = this.state
         let title = video.name
         let release = video.first_air_date
         let runtime = video.episode_run_time
@@ -152,6 +155,11 @@ class Details extends Component {
                             </div>
 
                         </div>
+                        <div className={showtrailer ? `d-flex backdrop-iframe` : `d-none`} >
+
+                            <VideoPlayer toggleTrailer={this.toggleTrailer} trailer={trailer} />
+                        </div>
+
 
                         <Reviews reviews={video.reviews} />
 
@@ -163,7 +171,6 @@ class Details extends Component {
                             })}
                         </div>
 
-                        <VideoPlayer trailer={this.state.trailer} />
                         <TTable torrents={torrents} />
                     </div>
                 </div>
@@ -174,9 +181,9 @@ class Details extends Component {
 
 
 let mapState = (state) => {
-    const { video, fetching, torrents } = state.reducer
+    const { video, fetching, torrents, trailer } = state.reducer
 
-    return { video, fetching, torrents }
+    return { video, fetching, torrents, trailer }
 }
 
 let mapProps = (dispatch) => {
