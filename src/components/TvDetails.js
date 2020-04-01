@@ -6,11 +6,9 @@ import "./Details.css"
 import MoviePoster from "./MoviePoster";
 import Reviews from "./Reviews";
 import VideoPlayer from "./VideoPlayer";
-import axios from "axios";
 import { v4 as uuid } from 'uuid';
 import TTable from "./torrentsTable";
 
-const api_key = '71e17cf532242a8619c4f89f2b8c3cb5'
 
 class Details extends Component {
     constructor(props) {
@@ -53,7 +51,6 @@ class Details extends Component {
     render() {
         let { video, fetching, torrents, trailer } = this.props
         const { trailer: showtrailer } = this.state
-        console.log(showtrailer, trailer)
         let title = video.name
         let release = video.first_air_date
         let runtime = video.episode_run_time

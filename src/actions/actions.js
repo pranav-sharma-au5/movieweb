@@ -91,7 +91,7 @@ export function fetchingData() {
 export function getTorrentLinks(video) {
     let request = axios({
         method: "get",
-        url: ` http://get-magnet.herokuapp.com/?video=${video}`
+        url: ` https://get-magnet.herokuapp.com/?video=${video}`
     })
     return (dispatch) => {
         request.then(torrents => {
@@ -121,7 +121,6 @@ export function getTrailer(tab, id) {
 
         axios.get(url).then(videosData => {
             let trailer = videosData.data.results[0] || { type: undefined }
-            console.log(trailer)
             return dispatch({
                 type: "trailer",
                 payload: trailer
@@ -131,7 +130,7 @@ export function getTrailer(tab, id) {
 }
 
 export function getOmdbData(imdb_id) {
-    const request = axios.get(`http://www.omdbapi.com/?apikey=${api_key2}&i=${imdb_id}`)
+    const request = axios.get(`https://www.omdbapi.com/?apikey=${api_key2}&i=${imdb_id}`)
     return (dispatch) => {
         request.then(res => {
             dispatch({
