@@ -1,5 +1,6 @@
 import axios from "axios"
 const api_key = '71e17cf532242a8619c4f89f2b8c3cb5'
+const api_key2 = '3c41f150'
 
 export function getVideos(category, page) {
     let request = axios({
@@ -75,11 +76,67 @@ export function getDetails(category, id) {
 
     }
 }
-export function clearVideo() {
-    return { type: "clear" }
+export function changeTab() {
+    return { type: "tab" }
 }
 
-export function clearAllVideos() {
-    return { type: "clear_all" }
 
+
+export function fetchingData() {
+    return {
+        type: "fetch"
+    }
+}
+
+export function getTorrentLinks(video) {
+    let request = axios({
+        method: "get",
+        url: ` https://get-magnet.herokuapp.com//?video=${video}`
+    })
+    return (dispatch) => {
+        request.then(torrents => {
+            dispatch({
+                type: "torrents",
+                payload: torrents.data
+            })
+        })
+    }
+}
+export function search(query) {
+    let request = axios.get(`
+    https://api.themoviedb.org/3/search/multi?api_key=${api_key}&language=en-US&query=${query}&page=1&include_adult=false`)
+
+    return (dispatch) => {
+        request.then(res => {
+            dispatch({
+                type: "search",
+                payload: res.data.results
+            })
+        })
+    }
+}
+export function getTrailer(tab, id) {
+    let url = `https://api.themoviedb.org/3/${tab}/${id}/videos?api_key=${api_key}&language=en-US`
+    return dispatch => {
+
+        axios.get(url).then(videosData => {
+            let trailer = videosData.data.results[0] || { type: undefined }
+            return dispatch({
+                type: "trailer",
+                payload: trailer
+            })
+        })
+    }
+}
+
+export function getOmdbData(imdb_id) {
+    const request = axios.get(`http://www.omdbapi.com/?apikey=${api_key2}&i=${imdb_id}`)
+    return (dispatch) => {
+        request.then(res => {
+            dispatch({
+                type: "omdbData",
+                payload: res.data
+            })
+        })
+    }
 }

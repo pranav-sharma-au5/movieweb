@@ -1,72 +1,71 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux"
 import { bindActionCreators } from 'redux';
-import { getVideos, getDetails, fetchingData, getTorrentLinks, getTrailer, getOmdbData } from "../actions/actions";
+import { getVideos, getDetails, fetchingData, getTorrentLinks } from "../actions/actions";
+import "./Details.css"
 import MoviePoster from "./MoviePoster";
 import Reviews from "./Reviews";
 import VideoPlayer from "./VideoPlayer";
+import axios from "axios";
 import { v4 as uuid } from 'uuid';
 import TTable from "./torrentsTable";
-import "./Details.css"
 
-const rotTomatoUrl = `https://www.rottentomatoes.com//assets/pizza-pie/images/icons/global/new-cf.9b01b08d257.png`
-const metaUrl = `https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Metacritic.svg/600px-Metacritic.svg.png`
-// const ImdbUrl = `https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Metacritic.svg/600px-Metacritic.svg.png`
-
+const api_key = '71e17cf532242a8619c4f89f2b8c3cb5'
 
 class Details extends Component {
-    state = {
-        trailer: false
+    constructor(props) {
+        super(props)
+        this.state = { trailer: '' }
     }
 
-    toggleTrailer = () => {
-        this.setState((prevState) => ({ trailer: !prevState.trailer }))
+
+    goToTrailer() {
+        window.scrollTo(0, document.body.scrollHeight)
     }
 
 
 
     componentDidMount() {
-        let { video, fetching, getTorrentLinks, fetchingData, getDetails, getTrailer } = this.props
-        const { movieId, movie } = this.props.match.params
-        const id = movieId
-        const tab = movie ? "movie" : "tv"
+        let { video, fetching, getTorrentLinks } = this.props
+        const { tvId, tv } = this.props.match.params
+        const id = tvId
+        const tab = "tv"
         //don't have the video and it is not getting fetched then make request
         if (!(fetching || video)) {
             //set flag to indicate data fetching
-            fetchingData()
-            getDetails(tab, id)
+            this.props.fetchingData()
+            this.props.getDetails(tab, id)
         }
-        getTorrentLinks(movie.replace(/-/g, "+"))
-        getTrailer(tab, id)
+        getTorrentLinks(tv.replace(/-/g, "+"))
+
         window.scrollTo(0, 0)
+        let url = `https://api.themoviedb.org/3/${tab}/${id}/videos?api_key=${api_key}&language=en-US`
 
-
-
+        axios.get(url).then(videosData => {
+            let trailer = videosData.data.results[0] || { type: undefined }
+            if (trailer.type === "Trailer") {
+                this.setState({ trailer: trailer.key })
+            }
+        })
     }
     componentDidUpdate(prevProps) {
         if (prevProps.location !== this.props.location) {
             this.componentDidMount()
         }
-        if (prevProps.video.imdb_id !== this.props.video.imdb_id) {
-            const { video: { imdb_id }, getOmdbData } = this.props
-            getOmdbData(imdb_id)
-        }
-
     }
 
 
 
     render() {
-        const { trailer: showtrailer } = this.state
-        let { video, fetching, torrents, trailer, omdb } = this.props
-        let title = video.title
-        let release = video.release_date
-        let runtime = video.runtime
-        let { cast, crew } = video
-        let director, writer
+        let { video, fetching, torrents } = this.props
+        console.log(video)
+        let title = video.name
+        let release = video.first_air_date
+        let runtime = video.episode_run_time
+        let { cast } = video
+        let creator
         if (video) {
-            writer = crew.filter(el => el.department === "Writing")
-            director = crew.filter(el => el.job === "Director")
+            creator = video.created_by
             cast = cast.slice(0, 5).map(el => el.name).join(", ")
         }
         document.documentElement.style.setProperty("--final", (140 - (140 * parseInt(video.vote_average)) / 10))
@@ -99,22 +98,10 @@ class Details extends Component {
 
                                 <h6 className="text-muted ml-3 thin">{video.tagline}</h6>
 
-                                <div className="row ratings-parent ">
-                                    <div className="imdb">
-                                        <i className="fa ratings fa-imdb"></i> <span className="ratings-value">{omdb ? omdb.Ratings[0].Value : ''}</span>
-                                    </div>
-                                    <div className="imdb">
-                                        <img src={rotTomatoUrl} className="ratings" alt="" /> <span className="ratings-value">{omdb ? omdb.Ratings[1].Value : ''}</span>
-                                    </div>
-                                    <div className="imdb">
-                                        <img src={metaUrl} className="ratings" alt="" /><span className="ratings-value">{omdb ? omdb.Ratings[2].Value : ''}</span>
-                                    </div>
-                                </div>
-
                                 <div className="row py-3  my-3">
                                     <div className="col-md-5  ">
                                         <p className="text-light text-truncate mb-5">
-                                            <span className="text-secondary font-weight-lighter">Director:</span> {director.map(el => el.name).join(", ")}
+                                            <span className="text-secondary font-weight-lighter">Created by:</span> {creator.map(el => el.name).join(", ")}
                                         </p>
 
                                     </div>
@@ -127,7 +114,7 @@ class Details extends Component {
                                     <div className="col-md-5  ">
 
                                         <p className="text-light text-truncate mb-5">
-                                            <span className="text-secondary font-weight-lighter">Writer:</span> {writer.map(el => el.name).join(", ")}
+                                            <span className="text-secondary font-weight-lighter">Seasons:</span> {oneToNum(video.number_of_seasons).join(" ")}
                                         </p>
 
                                     </div>
@@ -142,14 +129,14 @@ class Details extends Component {
 
 
                                         <p className="text-light" >
-                                            <span className="text-secondary font-weight-lighter">Release:</span> {formatDate(release)}
+                                            <span className="text-secondary font-weight-lighter">First Air Date:</span> {formatDate(release)}
                                         </p>
                                     </div>
                                     <div className=" col-md-7  ">
 
 
                                         <p className="text-light">
-                                            <span className="go-to-trailer" onClick={() => this.toggleTrailer()}>
+                                            <span className="go-to-trailer" onClick={() => this.goToTrailer()}>
                                                 <i className="fa fa-play"></i> Play Trailer
                                            </span>
                                         </p>
@@ -165,10 +152,6 @@ class Details extends Component {
                             </div>
 
                         </div>
-                        <div className={showtrailer ? `d-flex backdrop-iframe` : `d-none`} >
-
-                            <VideoPlayer toggleTrailer={this.toggleTrailer} trailer={trailer} />
-                        </div>
 
                         <Reviews reviews={video.reviews} />
 
@@ -180,9 +163,8 @@ class Details extends Component {
                             })}
                         </div>
 
-
+                        <VideoPlayer trailer={this.state.trailer} />
                         <TTable torrents={torrents} />
-
                     </div>
                 </div>
             );
@@ -192,12 +174,13 @@ class Details extends Component {
 
 
 let mapState = (state) => {
-    const { video, fetching, torrents, trailer, omdb } = state.reducer
-    return { video, fetching, torrents, trailer, omdb }
+    const { video, fetching, torrents } = state.reducer
+
+    return { video, fetching, torrents }
 }
 
 let mapProps = (dispatch) => {
-    return bindActionCreators({ getVideos, getDetails, fetchingData, getTorrentLinks, getTrailer, getOmdbData }, dispatch)
+    return bindActionCreators({ getVideos, getDetails, fetchingData, getTorrentLinks }, dispatch)
 }
 export default connect(mapState, mapProps)(Details);
 
@@ -209,11 +192,15 @@ export default connect(mapState, mapProps)(Details);
 
 
 function formatTime(mins) {
+    mins = typeof (mins) === "object" ? mins[0] : mins
     let hrs = Math.floor(mins / 60)
-    mins = mins % 60
+    mins = mins ? mins % 60 : ''
+    if (hrs > 0 && mins < 1) {
+        return "60 mins"
+    }
     if (hrs > 0)
         return hrs + "h " + mins + "m"
-    return mins + "mins"
+    return mins + " mins"
 }
 function formatDate(date) {
     let year = date.slice(0, 4)
@@ -226,6 +213,11 @@ function getColor(value) {
     value /= 10
     var hue = ((value) * 100).toString(10);
     let x = ["hsl(", hue, ",100%,50%)"].join("");
-
     return x
+}
+function oneToNum(num) {
+    let arr = []
+    for (let i = 1; i <= num; i++)
+        arr.push(i)
+    return arr
 }

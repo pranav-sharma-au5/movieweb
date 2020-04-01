@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux"
 import { getVideos, getMoreVideos, getDetails } from "../actions/actions";
 import { bindActionCreators } from 'redux';
-import { Link } from "react-router-dom";
+import { v4 as uuid } from 'uuid';
+import MoviePoster from "./MoviePoster";
 
 class Home extends Component {
     state = {
@@ -24,15 +25,12 @@ class Home extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (window.location.pathname[1] !== this.state.tab[0]) {
-            let video = window.location.pathname === "/movies" ? 'movie' : 'tv'
-            this.setState({ tab: video }, () => this.props.getVideos(video, 1))
+        if (prevProps.location !== this.props.location) {
+            this.componentDidMount()
         }
+
     }
 
-    componentWillUnmount() {
-        console.log("home page unmounted")
-    }
 
     load = () => {
         this.props.getMoreVideos(this.state.tab, this.props.reducer.page + 1)
@@ -42,43 +40,22 @@ class Home extends Component {
 
 
     render() {
-        console.log(this.props.reducer.videos)
+        let { videos } = this.props.reducer
         return (<div>
 
 
-            <header>
-                <nav>
-                    <Link to="/movies" >
-                        <button className={"mx-3 " + (this.state.tab === 'movie' ? 'btn btn-outline-light' : 'btn btn-outline-secondary')} >Movies</button>
-                    </Link>
-                    <Link to="/tvshows" >
-                        <button className={this.state.tab === 'movie' ? 'btn btn-outline-secondary' : 'btn btn-outline-light'} >TV Shows</button>
-                    </Link>
-                </nav>
-            </header>
+
             <main>
                 <h2 className="my-3 ">
                     Popular {this.state.tab === 'movie' ? "Movies" : "TV Shows"}
                 </h2>
 
                 <div className="row w-100">
-                    {this.props.reducer.videos.map((video, index) => {
-                        let videoName = video.title || video.name
+                    {videos.map((video, index) => {
+
                         return (
-                            < div key={index} className="col-2  thumbnail">
-                                <Link id={video.id}
-                                    to={`${window.location.pathname}/${videoName.replace(/\s/g, "-").toLowerCase()}/${video.id}`}>
-
-                                    <img className="poster" src={`http://image.tmdb.org/t/p/w500/${video.poster_path}`} alt="" />
-
-                                    <p className=" title col text-truncate text-white">
-                                        {videoName}
-                                    </p>
-                                    <i className="fa fa-heart"></i>
-                                    <i className="fa fa-star"> <span className="text-white">{video.vote_average}</span></i>
-                                </Link>
-
-                            </div>)
+                            <MoviePoster tab={this.state.tab} key={uuid()} video={video} />
+                        )
                     }
                     )}
                     <div className="col-2 align-items-center justify-content-center flex-column d-flex">
