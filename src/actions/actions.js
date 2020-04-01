@@ -121,6 +121,7 @@ export function getTrailer(tab, id) {
 
         axios.get(url).then(videosData => {
             let trailer = videosData.data.results[0] || { type: undefined }
+            console.log(trailer)
             return dispatch({
                 type: "trailer",
                 payload: trailer

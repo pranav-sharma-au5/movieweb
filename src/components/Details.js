@@ -101,13 +101,13 @@ class Details extends Component {
 
                                 <div className="row ratings-parent ">
                                     <div className="imdb">
-                                        <i className="fa ratings fa-imdb"></i> <span className="ratings-value">{omdb ? omdb.Ratings[0].Value : ''}</span>
+                                        <i className="fa ratings fa-imdb"></i> <span className="ratings-value">{omdb ? omdb.Ratings[0] ? omdb.Ratings[0].Value : '' : ""}</span>
                                     </div>
                                     <div className="imdb">
-                                        <img src={rotTomatoUrl} className="ratings" alt="" /> <span className="ratings-value">{omdb ? omdb.Ratings[1].Value : ''}</span>
+                                        <img src={rotTomatoUrl} className="ratings" alt="" /> <span className="ratings-value">{omdb ? omdb.Ratings[1] ? omdb.Ratings[1].Value : '' : ''}</span>
                                     </div>
                                     <div className="imdb">
-                                        <img src={metaUrl} className="ratings" alt="" /><span className="ratings-value">{omdb ? omdb.Ratings[2].Value : ''}</span>
+                                        <img src={metaUrl} className="ratings" alt="" /><span className="ratings-value">{omdb ? omdb.Ratings[2] ? omdb.Ratings[2].Value : '' : ''}</span>
                                     </div>
                                 </div>
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux"
 import { bindActionCreators } from 'redux';
-import { getVideos, getDetails, fetchingData, getTorrentLinks } from "../actions/actions";
+import { getVideos, getDetails, fetchingData, getTorrentLinks, getTrailer } from "../actions/actions";
 import "./Details.css"
 import MoviePoster from "./MoviePoster";
 import Reviews from "./Reviews";
@@ -19,9 +19,7 @@ class Details extends Component {
     }
 
 
-    goToTrailer() {
-        window.scrollTo(0, document.body.scrollHeight)
-    }
+
     toggleTrailer = () => {
         this.setState((prevState) => ({ trailer: !prevState.trailer }))
     }
@@ -29,7 +27,7 @@ class Details extends Component {
 
 
     componentDidMount() {
-        let { video, fetching, getTorrentLinks } = this.props
+        let { video, fetching, getTorrentLinks, getTrailer } = this.props
         const { tvId, tv } = this.props.match.params
         const id = tvId
         const tab = "tv"
@@ -42,14 +40,7 @@ class Details extends Component {
         getTorrentLinks(tv.replace(/-/g, "+"))
 
         window.scrollTo(0, 0)
-        let url = `https://api.themoviedb.org/3/${tab}/${id}/videos?api_key=${api_key}&language=en-US`
-
-        axios.get(url).then(videosData => {
-            let trailer = videosData.data.results[0] || { type: undefined }
-            if (trailer.type === "Trailer") {
-                this.setState({ trailer: trailer.key })
-            }
-        })
+        getTrailer(tab, id)
     }
     componentDidUpdate(prevProps) {
         if (prevProps.location !== this.props.location) {
@@ -61,7 +52,8 @@ class Details extends Component {
 
     render() {
         let { video, fetching, torrents, trailer } = this.props
-        const { showtrailer } = this.state
+        const { trailer: showtrailer } = this.state
+        console.log(showtrailer, trailer)
         let title = video.name
         let release = video.first_air_date
         let runtime = video.episode_run_time
@@ -139,7 +131,7 @@ class Details extends Component {
 
 
                                         <p className="text-light">
-                                            <span className="go-to-trailer" onClick={() => this.goToTrailer()}>
+                                            <span className="go-to-trailer" onClick={() => this.toggleTrailer()}>
                                                 <i className="fa fa-play"></i> Play Trailer
                                            </span>
                                         </p>
@@ -187,7 +179,7 @@ let mapState = (state) => {
 }
 
 let mapProps = (dispatch) => {
-    return bindActionCreators({ getVideos, getDetails, fetchingData, getTorrentLinks }, dispatch)
+    return bindActionCreators({ getVideos, getDetails, fetchingData, getTorrentLinks, getTrailer }, dispatch)
 }
 export default connect(mapState, mapProps)(Details);
 
