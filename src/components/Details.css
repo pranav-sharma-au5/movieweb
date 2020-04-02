@@ -140,6 +140,14 @@ svg circle:nth-child(2) {
     width: 100%;
 }
 
+@media screen and (max-width:600px) {
+    .torrent-table {
+        width: 120%;
+        table-layout: fixed;
+        transform: translateX(-20%);
+    }
+}
+
 .torrent-table th:first-child {
     border-top-left-radius: 5px;
 }

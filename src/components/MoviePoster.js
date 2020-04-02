@@ -24,7 +24,7 @@ class MoviePoster extends Component {
         const videoName = video.title || video.name
         const link = video.title ? "movies" : "tvshows"
         const tab = video.title ? "movie" : "tv"
-        return (< div className="col-2  thumbnail">
+        return (< div className="col-6 col-xl-2 col-lg-3 col-md-4  thumbnail">
             <Link
                 onClick={() => this.handleClick(tab, video.id)}
                 to={`/${link}/${videoName.replace(/\s/g, "-").toLowerCase()}/${video.id}`}>

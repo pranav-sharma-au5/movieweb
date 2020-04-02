@@ -111,3 +111,7 @@ body {
     animation: fadeout 0.9s ease-out forwards;
     border-radius: 5px;
 }
+
+.load-more {
+    min-height: 300px;
+}

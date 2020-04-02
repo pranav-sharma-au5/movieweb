@@ -58,9 +58,9 @@ class Home extends Component {
                         )
                     }
                     )}
-                    <div className="col-2 align-items-center justify-content-center flex-column d-flex">
+                    <div className="col-6 col-xl-2 load-more col-lg-3 col-md-4  align-items-center justify-content-center flex-column d-flex">
 
-                        <button className='w-50 btn btn-outline-warning' onClick={this.load} >Load more</button>
+                        <button className='w-50  btn btn-outline-warning' onClick={this.load} >Load more</button>
                     </div>
                 </div>
 

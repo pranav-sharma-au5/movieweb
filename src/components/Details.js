@@ -36,7 +36,7 @@ class Details extends Component {
             fetchingData()
             getDetails(tab, id)
         }
-        getTorrentLinks(movie.replace(/-/g, "+"))
+        getTorrentLinks(movie.replace(/-/g, " "), "Movies")
         getTrailer(tab, id)
         window.scrollTo(0, 0)
 
