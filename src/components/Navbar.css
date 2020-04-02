@@ -90,3 +90,18 @@
     padding: 0.4rem;
     flex: 1
 }
+
+@media screen and (max-width:600px) {
+    /* .navbar-list {
+        position: absolute;
+        left: 0;
+        top: 2rem;
+        display: block;
+    }
+    .search-div {
+        margin-left: 2rem;
+    } */
+    .navbar-profile {
+        display: none;
+    }
+}
